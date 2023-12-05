@@ -24,6 +24,31 @@ class todoController {
     getTodos(req, res){
         res.json({tasks:this.TODOS})
     }
+
+    updateTodo(req, res){
+        //get id grom url params
+        const todoId = req.params.id
+        // get the updated task name from request body (like form data)
+        const updatedTask = req.body.task
+        // get the array e;ement index if todo id is equal with url params id
+        const todoIndex = this.TODOS.findIndex((todo) => todo.id == todoId)
+        //if url params id is not correct - send error message
+        if (todoIndex < 0) {
+            throw new Error('Could not find todo!')
+            res.json({
+                message: 'Cound not find todo with such index'
+            })
+        }
+        // if id is ok - update Todo
+        // for update create element with same id and new task
+        // and save it in the same array element by this index
+        this.TODOS[todoIndex] = new Todo(this.TODOS[todoIndex].id, updatedTask)
+        // show updated info
+        res.json({
+            message: 'Updated todo',
+            updatedTask: this.TODOS[todoIndex]
+        })
+    }
 }
 
 export const TodoController = new todoController();
